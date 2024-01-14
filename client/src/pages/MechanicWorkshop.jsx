@@ -1,7 +1,8 @@
 import { useContext, useEffect, useState } from "react"
 import { UserContext } from "../../context/userContext"
+import '../css/preloader.css';
 
-export default function Dashboard() {
+export default function MechanicWorkshop() {
 
     const {user} = useContext(UserContext)
     const [loading, setLoading] = useState(true);
@@ -33,8 +34,7 @@ export default function Dashboard() {
                 </div>
             ) : (
                 <>
-                    <h1>Dashboard</h1>
-                    {!!user && ( <h1>Hi, {user.name}</h1> )}            
+                    <h1>Workshop Page</h1>            
                 </>
             )}
         </div>
