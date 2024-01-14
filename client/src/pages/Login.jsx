@@ -2,7 +2,6 @@ import { useState } from "react"
 import axios from "axios"
 import {toast} from 'react-hot-toast'
 import { useNavigate } from "react-router-dom"
-import './preloader.css';
 
 export default function Login() {
   
@@ -26,7 +25,7 @@ export default function Login() {
                 toast.error(data.error)
             } else {
                 setData({});
-                navigate('/dashboard')
+                navigate('/')
                 setTimeout(() => {
                     window.location.reload();
                 }, 1000);
