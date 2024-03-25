@@ -25,13 +25,6 @@ const productSchema = new Schema({
     product_availability: {
         type: Boolean,
         required: true
-    },
-    rating:{
-        type: String
-    },
-    images: {
-        type: [String], // String array for images
-        default: [] // Default empty array
     }
 })
 

@@ -201,37 +201,6 @@ const searchUsers = async (req, res) => {
   }
 };
 
-const searchProducts = async (req, res) => {
-  try {
-      const { search } = req.query;
-
-      if (!search) {
-          return res.json([]);
-      }
-
-      // Split the search string into individual terms
-      const searchTerms = search.split(' ');
-
-      // Construct an array of $regex expressions for each term
-      const regexExpressions = searchTerms.map(term => ({
-          $or: [
-              { product_name: { $regex: term, $options: 'i' } },
-              { product_description: { $regex: term, $options: 'i' } }
-          ]
-      }));
-
-      // Combine the expressions using $and
-      const products = await Products.find({
-          $and: regexExpressions
-      }).exec();
-
-      res.json(products);
-  } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Internal Server Error' });
-  }
-};
-
 const registerUser = async (req, res) => {
     try{
         const {name, phoneNumber, email, password} = req.body;
@@ -491,63 +460,50 @@ const customizerProfile = async (req, res) => {
 
 const addProduct = async (req, res) => {
   try {
-    const { supplier_id, product_name, product_description, product_price, product_quantity } = req.body;
+      const { supplier_id, product_name, product_description, product_price, product_quantity } = req.body;
 
-    if (!supplier_id) {
-      return res.json({
-        error: 'Supplier not found!',
-      });
-    }
+      if (!supplier_id) {
+          return res.json({
+              error: 'Supplier not found!'
+          })
+      };
+      // check name
+      if (!product_name) {
+          return res.json({
+              error: 'Product Name is required!'
+          })
+      };
 
-    if (!product_name) {
-      return res.json({
-        error: 'Product Name is required!',
-      });
-    }
+      if (!product_description) {
+          return res.json({
+              error: 'Product description is required!'
+          })
+      };
 
-    if (!product_description) {
-      return res.json({
-        error: 'Product description is required!',
-      });
-    }
+      if (!product_price) {
+          return res.json({
+              error: 'Enter a product price!'
+          })
+      };
+      if (!product_quantity) {
+          return res.json({
+              error: 'Enter a product quantity!'
+          })
+      };
+      const product = await Products.create({
+          supplier_id,
+          product_name,
+          product_description,
+          product_price,
+          product_quantity,
+          product_availability: true
+      })
 
-    if (!product_price) {
-      return res.json({
-        error: 'Enter a product price!',
-      });
-    }
-
-    if (!product_quantity) {
-      return res.json({
-        error: 'Enter a product quantity!',
-      });
-    }
-
-    // Check if images are present in the request
-    if (!req.files || req.files.length === 0) {
-      return res.json({
-        error: 'At least one image is required!',
-      });
-    }
-
-    const images = req.files.map(file => file.path);
-
-    const product = await Products.create({
-      supplier_id,
-      product_name,
-      product_description,
-      product_price,
-      product_quantity,
-      product_availability: true,
-      images,
-    });
-
-    return res.json(product);
+      return res.json(product);
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: 'Server error' });
+      console.log(error);
   }
-};
+}
 
 const editProduct = async (req, res) => {
   try {
@@ -583,6 +539,21 @@ const deleteProduct = async (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
   }
 }
+
+const getProducts = async (req, res) => {
+
+    try {
+            // Fetch additional user details from the database
+            const prodDetails = await Products.find().exec();
+  
+            res.json(prodDetails);
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+  
+  }
 
 const getStoreProducts = async (req, res) => {
 
@@ -623,8 +594,8 @@ module.exports = {
     getMechanicProfile,
     getCustomizerProfile,
     searchUsers,
-    searchProducts,
     addProduct,
+    getProducts,
     getStoreProducts,
     editProduct,
     deleteProduct

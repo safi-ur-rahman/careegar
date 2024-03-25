@@ -13,7 +13,7 @@ import { useGLTF } from '@react-three/drei'
 export default function Model(props) {
   const { nodes, materials } = useGLTF('../Fortuner/scene.gltf')
   return (
-    <group {...props} dispose={null} scale={9}>
+    <group {...props} dispose={null} scale={5}>
       <group rotation={[-Math.PI / 2, 0, 0]} scale={100}>
         <group rotation={[Math.PI / 2, 0, 0]} scale={0.01}>
           <group position={[0, 1.034, 1.597]} rotation={[-Math.PI / 2, 0, 0]} scale={0.01}>
