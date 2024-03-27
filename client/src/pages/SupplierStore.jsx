@@ -62,7 +62,7 @@ export default function SupplierStore() {
                 </div>
             ) : (
                 <>
-                    <h1>Store Page</h1>
+                    <h1 style={{color: 'black', fontSize:'44px' }}>Store Page</h1>
                     <button onClick={() => {setprodModal(true); setproductToEdit(null)}}>Add Product</button>
                 </>
             )}
@@ -72,12 +72,12 @@ export default function SupplierStore() {
             )}
 
             <div className="products-grid">
-                <h2>Products</h2>
+                <h1 style={{color: 'white', fontSize:'44px' }}>Products</h1>
                 <ul className="grid">
                     {products.map((product) => (
                         <li key={product._id} className="grid-item">
                             <div className="product-card">
-                                
+
                                 <div>
                                     {product.images.map((image, index) => (
                                         <React.Fragment key={index}>
@@ -90,8 +90,11 @@ export default function SupplierStore() {
                                 <p>Description: {product.product_description}</p>
                                 <p>Quantity: {product.product_quantity}</p>
                                 <p>Price: {product.product_price}</p>
+                                <div className="prod-icons">
                                 <img src={editSVG} onClick={()=>{setproductToEdit(product); setprodModal(true)}} alt="Edit Logo" />
                                 <img src={deleteSVG} onClick={()=>{DeleteProduct(product)}} />
+                                
+                                </div>
                                 {/* Additional product details can be added here */}
                             </div>
                             

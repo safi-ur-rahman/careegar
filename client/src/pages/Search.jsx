@@ -32,8 +32,6 @@ export default function Search() {
       });
   };
 
-  console.log(productResults);
-
   return (
     <div>
       <button onClick={searchProducts}>Products</button>

@@ -13,7 +13,7 @@ import { useGLTF } from '@react-three/drei'
 export default function Model(props) {
   const { nodes, materials } = useGLTF('../WagonR/scene.gltf')
   return (
-    <group {...props} dispose={null} scale={4}>
+    <group {...props} dispose={null} scale={5}>
       <group scale={0.01}>
         <group position={[0, 107.411, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={100}>
           <group position={[0.755, 1.338, -0.677]}>

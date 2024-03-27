@@ -91,7 +91,6 @@ export default function CarOwnerProfileModal() {
     } else {
       setStep((prevStep) => prevStep + 1);
     }
-    console.log(data.image)
   };
 
   if(modal) {

@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const cors = require('cors');
-const { registerUser, loginUser, getProfile, getCarOwnerProfile, getSupplierProfile, getMechanicProfile, getCustomizerProfile, logoutUser, carownerProfile, supplierProfile, mechanicProfile, customizerProfile, searchUsers, searchProducts, addProduct, deleteProduct, getStoreProducts, editProduct } = require('../controllers/authControllers');
+const { registerUser, loginUser, getProfile, getCarOwnerProfile, getSupplierProfile,
+   getMechanicProfile, getCustomizerProfile, logoutUser, carownerProfile, supplierProfile,
+    mechanicProfile, customizerProfile, searchUsers, searchProducts, getProducts, addProduct, deleteProduct,
+     getStoreProducts, editProduct } = require('../controllers/authControllers');
 const multer = require('multer');
 const path = require('path');
 
@@ -25,7 +28,7 @@ const storage = multer.diskStorage({
 router.use(
     cors({
         credentials: true,
-        origin: 'http://127.0.0.1:5173'
+        origin: 'http://localhost:5173'
     })
 )
 
@@ -41,11 +44,12 @@ router.post('/carownerProfileModal', upload.single('image'), carownerProfile)
 router.post('/supplierProfileModal', upload.single('image'), supplierProfile)
 router.post('/mechanicProfileModal', upload.single('image'), mechanicProfile)
 router.post('/customizerProfileModal', upload.single('image'), customizerProfile)
-router.get('/searchUsers', searchUsers);
+router.get('/searchUsers', searchUsers)
+router.get('/getProducts', getProducts)
 router.get('/searchProducts', searchProducts);
 router.post('/addProduct', upload.array('images', 10), addProduct);
-router.get('/storeProducts', getStoreProducts);
-router.put('/editProduct', editProduct);
-router.delete('/deleteProduct', deleteProduct);
+router.get('/storeProducts', getStoreProducts)
+router.put('/editProduct', editProduct)
+router.delete('/deleteProduct', deleteProduct)
 
 module.exports = router

@@ -28,7 +28,7 @@ export default function Header() {
     return (
     <div>
         <div className="header">
-            <h1>Careegar</h1>
+        <Link to="/"><h1>Careegar</h1></Link>
 
             <input 
                 className="search-bar" 
