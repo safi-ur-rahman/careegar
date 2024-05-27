@@ -1,0 +1,90 @@
+.container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+}
+
+.left-container {
+    display: flex;
+    flex-direction: column;
+    align-items:flex-start;
+    background-color: #000000;
+    color: white;
+    padding-left: 3em;
+    width: 40%;
+}
+
+img{
+    width: 60%;
+}
+.loginTxt{
+    display: flex;
+    flex-direction: column;
+    align-items:flex-start;
+    background-color: #000000;
+    color: white;
+    padding-left: 3em;
+    width: 100%;
+}
+
+.imgLogin{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.left-container h1{
+    font-size: 48px;
+}
+.right-container, .right-container-signup {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+
+}
+
+.right-container form, .right-container-signup form {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: self-start;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    margin-left: 3rem;
+    padding-bottom: 0.5rem;
+}
+.right-container form{
+    height: 27vh;
+}
+.right-container-signup form{
+    height: 55vh;
+}
+
+.login-button {
+    background-color: #000000;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+input{
+    height: 2.5em;
+    width: 18rem;
+    border-radius: 2px;
+    border-color: rgb(180, 178, 178);
+}
+
+label{
+    font-size: 20px;
+    font-weight:400;
+}
