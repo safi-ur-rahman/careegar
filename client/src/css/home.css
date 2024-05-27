@@ -1,0 +1,99 @@
+.home-container{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+
+}
+
+.intro-container{
+    display: flex;
+    width: 100%;
+    background-color: black;
+    flex-direction: column;
+    color: white;
+    height: 115vh;
+}
+
+.intro-container-heading{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 1em;
+    margin-top: 1em;
+}
+
+.intro-container-main{
+    display: flex;
+    width: 100%;
+}
+
+.intro-container-left, .intro-container-left-config{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    width: 100%;  
+    padding-left: 2em; 
+}
+
+.intro-container-left span{
+    font-size: 44px; 
+    text-align: left;
+    font-weight: bold; 
+    margin-bottom: 0.5em;
+   
+}
+
+.intro-container-left p{
+    font-size: 14px; 
+    text-align: left;
+    color: lightgray;
+    font-weight: 100; 
+    margin-bottom: 1.5em;
+}
+
+.intro-container-left-btn{
+    background-color: #ffffff;
+    color: #000000;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.intro-container-left-btn:hover{
+    background-color: rgb(143, 141, 141);
+    color: #000000;
+}
+
+.intro-container-right{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.intro-container-right img
+{
+    width: 80%;
+    border-radius: 7px;
+}
+.intro-container-left-config span{
+    font-size: 54px; 
+    text-align: left;
+    font-weight: bold; 
+    margin-bottom: 0.5em;
+    color: black;
+   
+}
+
+.intro-container-left-config p{
+    font-size: 15px; 
+    text-align: left;
+    color: rgb(0, 0, 0);
+    font-weight: 100; 
+    margin-bottom: 1.5em;
+}
