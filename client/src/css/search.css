@@ -1,0 +1,103 @@
+.search-container {
+    text-align: center;
+}
+
+.search-buttons {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.search-buttons button {
+    margin: 0 0.5em;
+    padding: 0.5em 1em;
+    font-size: 1em;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    background-color: black;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.search-buttons button:hover {
+    background-color: #787777;
+}
+
+.search-list {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 2%;
+    gap: 1em;
+}
+
+.search-card-product,
+.search-card-user,
+.search-card-service {
+    border: 1px solid black;
+    width: 300px;
+    padding: 1em;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.search-card-product:hover,
+.search-card-user:hover,
+.search-card-service:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.search-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-card-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-bottom: 0.5em;
+}
+
+.search-card-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.search-card-info strong {
+    color: black;
+}
+
+.search-card-info p {
+ font-weight: bold;
+}
+
+.search-card-info span  {
+    color: #555;
+}
+
+.search-card-link {
+    color: black;
+    text-decoration: none;
+}
+
+.search-card-link:hover {
+    color: #787777;
+}
+
+.search-no-results {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-top: 2em;
+}

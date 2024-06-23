@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../css/modal.css";
+import "../css/userProfileModal.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react"
 import { UserContext } from "../../context/userContext"
@@ -102,69 +103,66 @@ export default function CarOwnerProfileModal() {
 
   return (
     <>
-
       {modal && (
         <div className="modal">
           <div className="overlay"></div>
           <div className="modal-content">
-            <h2>Car Owner Profile</h2>
+            <h2 className="modal-heading">Car Owner Profile</h2>
             
             {step === 1 && (
               // Personal details section
-              <>
+              <div className="modal-form">
                 <h3>Personal Info</h3>
-                <label>Upload your image</label>
-                <input type="file" accept="image/*" onChange={handleFileChange}/>
-
-                {isDefaultImage && (
-                    <img style={{ width: '100px' }} src={defaultImage} alt="Profile Image" />
+                <label htmlFor="profileImage">Upload your image</label>
+                <input type="file" id="profileImage" accept="image/*" onChange={handleFileChange}/>
+  
+                {isDefaultImage ? (
+                  <img className="image-display" src={defaultImage} alt="Profile Image" />
+                ) : (
+                  <img className="image-display" src={URL.createObjectURL(data.image)} alt="Profile Image" />
                 )}
-                {!isDefaultImage && (
-                    <img style={{ width: '100px' }} src={URL.createObjectURL(data.image)} alt="Profile Image" />
-                )}
-
-
-                <label>Address</label>
-                <input type="text" placeholder="Delivery Address" value={data.address} onChange={(e) => setData({...data, address: e.target.value})}/>
-
-                <label>City</label>
-                <input type="text" placeholder="City of your residence" value={data.city} onChange={(e) => setData({...data, city: e.target.value})}/>
-
-                <button onClick={handleNext}>Next</button>
-              </>
+  
+                <label htmlFor="address">Address</label>
+                <input type="text" id="address" placeholder="Delivery Address" value={data.address} onChange={(e) => setData({...data, address: e.target.value})}/>
+  
+                <label htmlFor="city">City</label>
+                <input type="text" id="city" placeholder="City of your residence" value={data.city} onChange={(e) => setData({...data, city: e.target.value})}/>
+  
+                <button className="modal-button" onClick={handleNext}>Next</button>
+              </div>
             )}
-
+  
             {step === 2 && (
               // Car details section
-              <>
+              <div className="modal-form">
                 <h3>Car Details</h3>
-                <label>Make</label>
-                <input type="text" placeholder="Make of your car e.g. Toyota" value={data.car_make} onChange={(e) => setData({...data, car_make: e.target.value})}/>
-
-                <label>Model</label>
-                <input type="text" placeholder="Model of your car e.g. Corolla" value={data.car_model} onChange={(e) => setData({...data, car_model: e.target.value})}/>
-
-                <label>Submodel</label>
-                <input type="text" placeholder="Submodel of your car e.g. GLI" value={data.car_submodel} onChange={(e) => setData({...data, car_submodel: e.target.value})}/>
-
-                <label>Year</label>
-                <input type="text" placeholder="Year of your car e.g. 2019" value={data.car_year} onChange={(e) => setData({...data, car_year: e.target.value})}/>
-
+                <label htmlFor="carMake">Make</label>
+                <input type="text" id="carMake" placeholder="Make of your car e.g. Toyota" value={data.car_make} onChange={(e) => setData({...data, car_make: e.target.value})}/>
+  
+                <label htmlFor="carModel">Model</label>
+                <input type="text" id="carModel" placeholder="Model of your car e.g. Corolla" value={data.car_model} onChange={(e) => setData({...data, car_model: e.target.value})}/>
+  
+                <label htmlFor="carSubmodel">Submodel</label>
+                <input type="text" id="carSubmodel" placeholder="Submodel of your car e.g. GLI" value={data.car_submodel} onChange={(e) => setData({...data, car_submodel: e.target.value})}/>
+  
+                <label htmlFor="carYear">Year</label>
+                <input type="text" id="carYear" placeholder="Year of your car e.g. 2019" value={data.car_year} onChange={(e) => setData({...data, car_year: e.target.value})}/>
+  
                 <Link to='/profile'>
-                  <button onClick={profileData} type="submit">Confirm</button>
+                  <button className="modal-button" onClick={profileData} type="submit">Confirm</button>
                 </Link>
-              </> 
+              </div> 
             )}
-
-            
+  
             <Link to='/'>
-                  <button className="close-modal">
-                    Skip for Now
-                  </button>
-                </Link>
+              <button className="modal-button">
+                Skip for Now
+              </button>
+            </Link>
           </div>
         </div>
       )}
     </>
   );
+  
 }

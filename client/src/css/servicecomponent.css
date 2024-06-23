@@ -1,0 +1,142 @@
+.service-head{
+    background-color: black;
+    color: white;
+    height: 20vh;
+}
+.servicepage-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    margin-top: 9%;
+    margin-right: 3%;
+    margin-left: 3%;
+}
+.service-buttons{
+    display: flex;
+
+}
+
+.servicepage-preloader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+   
+}
+
+.servicepage-preloader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #555;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.servicepage-content {
+    display: flex;
+    width: 100%;
+}
+
+.servicepage-carousel {
+    width: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.servicepage-carousel-image {
+    width: 100%;
+    height: 35vh;
+    border-radius: 8px;
+}
+
+.servicepage-carousel-button {
+    margin: 10px;
+    padding: 10px;
+    background-color: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.servicepage-carousel-button:hover {
+    background-color: #333;
+}
+
+.servicepage-info {
+    width: 70%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.servicepage-schedule {
+    position: absolute;
+    top: 90px;
+    right: 20px;
+    background-color: white;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.servicepage-details {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    width: 22%;
+    
+}
+
+.servicepage-mechanic-experience {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    
+
+}
+.servicepage-book-service{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    width: 33%;
+}
+
+.servicepage-book-service {
+    display: flex;
+    flex-direction: column;
+}
+
+.servicepage-book-service label {
+    margin: 10px 0 5px;
+}
+
+.servicepage-book-service button {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.servicepage-book-service button:hover {
+    background-color: #333;
+}
+textarea{
+    border: 1px black solid;
+}

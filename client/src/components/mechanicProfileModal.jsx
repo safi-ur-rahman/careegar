@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../css/modal.css";
+import "../css/mechanicProfileModal.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react"
 import { UserContext } from "../../context/userContext"
@@ -52,6 +53,7 @@ export default function MechanicProfileModal() {
       formData.append("tags", tags);
       // Send image and other data to the server
       const response = await axios.post("/mechanicProfileModal", formData);
+      
 
       if (response.data.error) {
         toast.error(response.data.error);
@@ -139,86 +141,84 @@ export default function MechanicProfileModal() {
 
   return (
     <>
-
       {modal && (
         <div className="modal">
           <div className="overlay"></div>
           <div className="modal-content">
-            <h2>Mechanic Profile</h2>
+            <h2 className="modal-heading">Mechanic Profile</h2>
             
             {step === 1 && (
               // Personal details section
-              <>
+              <div className="modal-form">
                 <h3>Workshop Info</h3>
-                <label>Upload image</label>
-                <input type="file" accept="image/*" onChange={handleFileChange}/>
+                <label htmlFor="uploadImage">Upload image</label>
+                <input type="file" id="uploadImage" accept="image/*" onChange={handleFileChange}/>
                 
-                {isDefaultImage && (
-                    <img style={{ width: '100px' }} src={defaultImage} alt="Profile Image" />
+                {isDefaultImage ? (
+                  <img className="image-display" src={defaultImage} alt="Profile Image" />
+                ) : (
+                  <img className="image-display" src={URL.createObjectURL(data.image)} alt="Profile Image" />
                 )}
-                {!isDefaultImage && (
-                    <img style={{ width: '100px' }} src={URL.createObjectURL(data.image)} alt="Profile Image" />
-                )}
-
-                <label>Workshop Name</label>
-                <input type="text" placeholder="Name of your workshop" value={data.workshop_name} onChange={(e) => setData({...data, workshop_name: e.target.value})}/>
-
-                <label>Workshop Address</label>
-                <input type="text" placeholder="Location of your workshop" value={data.workshop_address} onChange={(e) => setData({...data, workshop_address: e.target.value})}/>
-
-                <label>Workshop City</label>
-                <input type="text" placeholder="City of your workshop" value={data.workshop_city} onChange={(e) => setData({...data, workshop_city: e.target.value})}/>
-
-                <label>Workshop Description</label>
-                <input type="text" placeholder="Tell your customers about your workshop" value={data.workshop_description} onChange={(e) => setData({...data, workshop_description: e.target.value})}/>
-
-                <button onClick={handleNext}>Next</button>
+  
+                <label htmlFor="workshopName">Workshop Name</label>
+                <input type="text" id="workshopName" placeholder="Name of your workshop" value={data.workshop_name} onChange={(e) => setData({...data, workshop_name: e.target.value})}/>
+  
+                <label htmlFor="workshopAddress">Workshop Address</label>
+                <input type="text" id="workshopAddress" placeholder="Location of your workshop" value={data.workshop_address} onChange={(e) => setData({...data, workshop_address: e.target.value})}/>
+  
+                <label htmlFor="workshopCity">Workshop City</label>
+                <input type="text" id="workshopCity" placeholder="City of your workshop" value={data.workshop_city} onChange={(e) => setData({...data, workshop_city: e.target.value})}/>
+  
+                <label htmlFor="workshopDescription">Workshop Description</label>
+                <input type="text" id="workshopDescription" placeholder="Tell your customers about your workshop" value={data.workshop_description} onChange={(e) => setData({...data, workshop_description: e.target.value})}/>
+  
+                <button className="modal-button" onClick={handleNext}>Next</button>
+              </div>
+            )}
+  
+            {step === 2 && (
+              // Mechanic Expertise section
+              <>
+              <div className="modal-form">
+                <h3>Mechanic Expertise</h3>
+                <label htmlFor="tagsInput">Add Tags:</label>
+                <em>Enter services or jobs (e.g., tyre mechanic, interior customizer) in which you are an expert and press enter for each tag to be added.</em>
+                <input
+                  id="tagsInput"
+                  type="text"
+                  placeholder="Tags"
+                  value={data.tagInput}
+                  onChange={(e) => setData({ ...data, tagInput: e.target.value })}
+                  onKeyDown={handleTagsChange}
+                />
+                <label>Entered Tags:</label>
+                <div>
+                  {data.tags.map((tag, index) => (
+                    <span key={index} className="tag">{tag}, </span>
+                  ))}
+                </div>
+                </div>
+                <button className="modal-button" onClick={previousStep}>Back</button>
+                <button className="modal-button" onClick={nextStep}>Next</button>
+              
               </>
             )}
-
-            {step === 2 && (
-                // Mechanic Expertise section
-                <>
-                    <h3>Mechanic Expertise</h3>
-                    <label>Add Tags:</label>
-                    <em>Enter services or jobs (e.g., tyre mechanic, interior customizer) in which you are an expert and press enter for each tag to be added.</em>
-                    <input
-                        style={{ width: '250px' }}
-                        type="text"
-                        placeholder="Tags"
-                        value={data.tagInput}
-                        onChange={(e) => setData({ ...data, tagInput: e.target.value })}
-                        onKeyDown={handleTagsChange}
-                    />
-                    <label>Entered Tags:</label>
-                    <div>
-                    {data.tags.map((tag, index) => (
-                        <span key={index} className="tag">{tag}, </span>
-                    ))}
-                    </div>
-                    <button onClick={previousStep}>Back</button>
-                    <button onClick={nextStep}>Next</button>
-                </>
-            )}
-
+  
             {step === 3 && (
-              // Car details section
-              <>
+              // Confirmation section
+              <div className="modalForm">
                 <h3>Confirmation</h3>
-                <p>Are you sure you want to set up Careegar as a mechanic and open a workshop with name {data.workshop_name}.</p>
-                <button onClick={previousStep}>Back</button>
+                <p>Are you sure you want to set up Careegar as a mechanic and open a workshop with name {data.workshop_name}?</p>
+                <button className="modal-button" onClick={previousStep}>Back</button>
                 <Link to='/profile'>
-                  <button onClick={profileData} type="submit">Confirm</button>
+                  <button className="modal-button" onClick={profileData} type="submit">Confirm</button>
                 </Link>
-              </> 
+              </div>
             )}
-
-            
+  
             <Link to='/'>
-                  <button className="close-modal">
-                    Skip for Now
-                  </button>
-                </Link>
+              <button>Skip for Now</button>
+            </Link>
           </div>
         </div>
       )}

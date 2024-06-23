@@ -4,12 +4,14 @@ import { useContext } from "react";
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { UserContext } from "../../context/userContext";
+import "../css/productModal.css";
 
 Modal.setAppElement('#root');
 
-const ServiceModal = ({ isOpen, onClose, serviceToEdit }) => {
+const ServiceModal = ({ isOpen, onClose, serviceToEdit, onServiceAdded }) => {
     const { user } = useContext(UserContext);
 
+    const [userDetails, setMechanicDetails] = useState(null);
     const [service_name, setName] = useState('');
     const [service_description, setDescription] = useState('');
     const [service_price, setPrice] = useState('');
@@ -18,6 +20,7 @@ const ServiceModal = ({ isOpen, onClose, serviceToEdit }) => {
     const [tagInput, setTagInput] = useState(''); // State for input value
 
     useEffect(() => {
+        getMechanicDetails();
         if (serviceToEdit) {
             setName(serviceToEdit.service_name || '');
             setDescription(serviceToEdit.service_description || '');
@@ -26,6 +29,12 @@ const ServiceModal = ({ isOpen, onClose, serviceToEdit }) => {
             setTags(serviceToEdit.tags || []);
         }
     }, [serviceToEdit]);
+
+    const getMechanicDetails = () => {
+        axios.get('/mechanicProfile').then(({ data }) => {
+            setMechanicDetails(data);
+        });
+    }
 
     const handleTagsChange = (e) => {
         // Check if the Enter key is pressed and the input is not empty
@@ -49,7 +58,7 @@ const ServiceModal = ({ isOpen, onClose, serviceToEdit }) => {
 
         if (service_name && service_description && service_price) {
             const newService = {
-                mechanic_id: user.id,
+                mechanic_id: userDetails._id,
                 service_name,
                 service_description,
                 service_price,
@@ -88,16 +97,15 @@ const ServiceModal = ({ isOpen, onClose, serviceToEdit }) => {
                 }
             });
 
-            console.log(formData);
-
             const response = await axios.post("/addService", formData);
             if (response.data.error) {
                 toast.error(response.data.error);
             } else {
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
+                // setTimeout(() => {
+                //     window.location.reload();
+                // }, 1000);
                 toast.success("Service Added.");
+                onServiceAdded();
             }
         } catch (error) {
             console.log(error);
@@ -110,10 +118,11 @@ const ServiceModal = ({ isOpen, onClose, serviceToEdit }) => {
             if (response.data.error) {
                 toast.error(response.data.error);
             } else {
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
+                // setTimeout(() => {
+                //     window.location.reload();
+                // }, 1000);
                 toast.success("Service Updated.");
+                onServiceAdded();
             }
         } catch (error) {
             console.log(error);
@@ -122,74 +131,104 @@ const ServiceModal = ({ isOpen, onClose, serviceToEdit }) => {
 
     return (
         <Modal
-            isOpen={isOpen}
-            onRequestClose={onClose}
-            contentLabel="Add Service Modal"
-        >
-            <h2>{serviceToEdit ? "Edit Service" : "Add Service"}</h2>
-            <form onSubmit={handleFormSubmit}>
-                <label htmlFor="name">Service Name:</label>
-                <input type="text" id="name" value={service_name} onChange={(e) => setName(e.target.value)} />
-
-                <label htmlFor="description">Description:</label>
-                <textarea id="description" value={service_description} onChange={(e) => setDescription(e.target.value)} />
-
-                <label htmlFor="price">Set a Starting Price:</label>
-                <input type="number" min={0} id="price" value={service_price} onChange={(e) => setPrice(e.target.value)} />
-
-                <label>Add Tags:</label>
-                <input
-                    style={{ width: '250px' }}
-                    type="text"
-                    placeholder="Tags"
-                    value={tagInput}
-                    onChange={(e) => setTagInput(e.target.value)}
-                    onKeyDown={handleTagsChange}
-                />
-                <label>Entered Tags:</label>
-                <div>
-                    {tags.map((tag, index) => (
-                        <span key={index} className="tag">{tag}, </span>
-                    ))}
-                </div>
-
-                {!serviceToEdit && (
-                    <>
-                        <label htmlFor="images">Upload Images:</label>
-                        <input type="file" id="images" multiple onChange={handleFileChange} />
-
-
-                        {images.length > 0 && (
-                            <div>
-                                <h4>Selected Images:</h4>
-                                {images.map((image, index) => (
-                                    <React.Fragment key={index}>
-                                        <img style={{ width: '30px' }} src={URL.createObjectURL(image)} alt={`Image ${index + 1}`} />
-                                    </React.Fragment>
-                                ))}
-                            </div>
-                        )}
-                    </>
-                )}
-                {serviceToEdit && (
-                    <>
-
-                        {images.length > 0 && (
-                            <div>
-                                <h4>Selected Images:</h4>
-                                {images.map((image, index) => (
-                                    <React.Fragment key={index}>
-                                        <img style={{ width: '30px' }} src={`http://localhost:8000/${image}`} alt={`Image ${index + 1}`} />
-                                    </React.Fragment>
-                                ))}
-                            </div>
-                        )}
-                    </>
-                )}
-                <button type="submit">{serviceToEdit ? "Save Changes" : "Add Service"}</button>
-                <button type="button" onClick={onClose}>Cancel</button>
-            </form>
-        </Modal>
+      isOpen={isOpen}
+      onRequestClose={onClose}
+      contentLabel="Add Service Modal"
+    >
+        <div className='modal-border'>
+      <h2 className='modal-heading'>{serviceToEdit ? "Edit Service" : "Add Service"}</h2>
+      <form onSubmit={handleFormSubmit} className="modal-form">
+        <div className="flex-forward">
+          <label htmlFor="name">Service Name</label>
+          <input
+            type="text"
+            id="name"
+            value={service_name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        <div className="flex-forward">
+          <label htmlFor="description">Description:</label>
+          <textarea
+            id="description"
+            value={service_description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
+        <div className="flex-forward">
+          <label htmlFor="price">Set a Starting Price</label>
+          <input
+            type="number"
+            min={0}
+            id="price"
+            value={service_price}
+            onChange={(e) => setPrice(e.target.value)}
+          />
+        </div>
+        <div className="flex-forward">
+          <label>Add Tags</label>
+          <input
+            style={{ width: '250px' }}
+            type="text"
+            placeholder="Tags"
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            onKeyDown={handleTagsChange}
+          />
+        </div>
+        <div className="flex-forward">
+          <label>Entered Tags</label>
+          <div>
+            {tags.map((tag, index) => (
+              <span key={index} className="tag">{tag}, </span>
+            ))}
+          </div>
+        </div>
+        {!serviceToEdit && (
+          <>
+            <div className="flex-forward">
+              <label htmlFor="images">Upload Images</label>
+              <input type="file" id="images" multiple onChange={handleFileChange} />
+            </div>
+            {images.length > 0 && (
+              <div className="imageView">
+                <h4>Selected Images:</h4>
+                {images.map((image, index) => (
+                  <React.Fragment key={index}>
+                    <img
+                      className="image-display"
+                      src={URL.createObjectURL(image)}
+                      alt={`Image ${index + 1}`}
+                    />
+                  </React.Fragment>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+        {serviceToEdit && (
+          <>
+            {images.length > 0 && (
+              <div className="imageView">
+                <h4>Selected Images:</h4>
+                {images.map((image, index) => (
+                  <React.Fragment key={index}>
+                    <img
+                      className="image-display"
+                      src={`http://localhost:8000/${image}`}
+                      alt={`Image ${index + 1}`}
+                    />
+                  </React.Fragment>
+                ))}
+              </div>
+            )}
+          </>
+        )}
+        <button className="modal-button" type="submit">{serviceToEdit ? "Save Changes" : "Add Service"}</button>
+        <button className="modal-button" type="button" onClick={onClose}>Cancel</button>
+      </form>
+      </div>
+    </Modal>
     );
 };
 

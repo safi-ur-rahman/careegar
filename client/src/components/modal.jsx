@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../css/modal.css";
+import "../css/modalui.css";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Modal() {
@@ -49,27 +50,27 @@ export default function Modal() {
 
   return (
     <>
-
       {modal && (
         <div className="modal">
           <div className="overlay"></div>
           <div className="modal-content">
-            <h2>Complete your Profile</h2>
+            <h2 className="modal-heading">Complete your Profile</h2>
             {showDropdown ? (
               // Render dropdown content
               <div className="dropdown">
-                <label>I want to use Careegar as a </label>
+                <label htmlFor="profileSelector">I want to use Careegar as a </label>
                 <select
                   id="profileSelector"
                   value={selectedOption}
                   onChange={(e) => setSelectedOption(e.target.value)}
+                  className="modal-select"
                 >
                   <option value="Car Owner">Car Owner</option>
                   <option value="Mechanic">Mechanic</option>
                   <option value="Customizer">Customizer</option>
                   <option value="Supplier">Supplier</option>
                 </select>
-                <button onClick={handleConfirm}>Confirm</button>
+                <button className="modal-button" onClick={handleConfirm}>Confirm</button>
               </div>
             ) : (
               // Render initial content
@@ -82,7 +83,7 @@ export default function Modal() {
                     Skip for Now
                   </button>
                 </Link>
-                <button onClick={toggleDropdown}>
+                <button className="modal-button" onClick={toggleDropdown}>
                   Proceed
                 </button>
               </>

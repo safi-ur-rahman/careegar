@@ -1,0 +1,12 @@
+.dashboard-button {
+    width:50%;
+    border: 1px white solid;
+    color: white;
+    background-color: black;
+    border-radius: 0;
+}
+
+.dashboard-button:hover {
+    background-color: white;
+    color: black;
+}

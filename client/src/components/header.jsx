@@ -42,18 +42,29 @@ export default function Header() {
                 {user && (
                     <>
                         <Link to="/">Home</Link>
+                        {user.userType === 'carOwner' && (
+                            <>    
+                                <Link to="/bookingsPage">Bookings</Link>
+                            </>
+                        )}
                         {user.userType === 'supplier' && (
-                            <Link to="/supplierStore">My Store</Link>
+                            <>    
+                                <Link to="/supplierStore">My Store</Link>
+                            </>
                         )}
                         {user.userType === 'mechanic' && (
-                            <Link to="/mechanicWorkshop">My Workshop</Link>
+                            <>
+                                <Link to="/mechanicWorkshop">My Workshop</Link>
+                            </>
                         )}
                         {user.userType === 'customizer' && (
                             <>
                                 <Link to="/customizerWorkshop">My Workshop</Link>
-                                <Link to="/3dConfigurator">3D Configurator</Link>
                             </>
                         )}
+                        <Link to="/3dConfigurator">3D Configurator</Link>
+                        <Link to="/marketplace">Market</Link>
+                        <Link to="/cart">Cart</Link>
                         <Link to="/profile">{user.name}</Link>
                         <a onClick={logout}>Logout</a>
                     </>

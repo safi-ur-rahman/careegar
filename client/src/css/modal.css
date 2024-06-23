@@ -20,19 +20,23 @@ body.active-modal {
 }
 
 .overlay {
-    background: rgba(49,49,49,0.8);
+    background: rgba(49, 49, 49, 0.8);
+    z-index: 10; /* Ensure overlay is above modal content */
 }
+
 .modal-content {
     position: absolute;
-    top: 40%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    line-height: 1.4;
+    line-height: 1.6;
     background: #f1f1f1;
     padding: 14px 28px;
     border-radius: 3px;
-    max-width: 600px;
-    min-width: 300px;
+    max-width: 1200px; /* Adjust width as needed */
+    max-height: 80%; /* Set a maximum height to enable scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
+    z-index: 11; /* Ensure modal content is above overlay */
 }
 
 .close-modal {
@@ -40,4 +44,12 @@ body.active-modal {
     top: 10px;
     right: 10px;
     padding: 5px 7px;
+    cursor: pointer;
+    background-color: #ccc;
+    border: none;
+    border-radius: 4px;
+}
+
+.close-modal:hover {
+    background-color: #aaa;
 }

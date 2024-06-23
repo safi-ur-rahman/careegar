@@ -5,7 +5,11 @@ const { registerUser, loginUser, getProfile, getCarOwnerProfile, getSupplierProf
    getMechanicProfile, getCustomizerProfile, logoutUser, carownerProfile, supplierProfile,
     mechanicProfile, customizerProfile, searchUsers, searchProducts, searchServices, getProducts, 
     addProduct, deleteProduct, getStoreProducts, editProduct, addService, getWorkshopServices, 
-    editService, deleteService } = require('../controllers/authControllers');
+    editService, deleteService, workshopDetails, getWorkshopDetails, 
+    setWorkshopExperience, getService, getProfilebyId, bookService,
+    getBookings, getUser, updateBooking, getUserBookings, getProductById, getCartProducts, 
+    addToCart, removeFromCart, getSupplierStore, 
+    getSupplierInfo } = require('../controllers/authControllers');
 const multer = require('multer');
 const path = require('path');
 
@@ -43,6 +47,8 @@ router.get('/carOwnerProfile', getCarOwnerProfile)
 router.get('/supplierProfile', getSupplierProfile)
 router.get('/mechanicProfile', getMechanicProfile)
 router.get('/customizerProfile', getCustomizerProfile)
+router.get('/getProfile/:id', getProfilebyId)
+router.get('/getUser/:id', getUser);
 
 router.post('/carownerProfileModal', upload.single('image'), carownerProfile)
 router.post('/supplierProfileModal', upload.single('image'), supplierProfile)
@@ -56,12 +62,29 @@ router.get('/searchServices', searchServices);
 router.post('/addProduct', upload.array('images', 10), addProduct);
 router.get('/storeProducts', getStoreProducts)
 router.put('/editProduct', editProduct)
-router.delete('/deleteProduct', deleteProduct)
+router.delete('/deleteProduct/:productId', deleteProduct);
 router.get('/getProducts', getProducts)
+router.get('/getProductById/:id', getProductById);
 
 router.post('/addService', upload.array('images', 10), addService);
-router.get('/workshopServices', getWorkshopServices)
+router.get('/workshopServices/:mechanicId', getWorkshopServices)
 router.put('/editService', editService)
-router.delete('/deleteService', deleteService)
+router.delete('/deleteService/:id', deleteService)
+router.get('/getService/:id', getService)
+
+router.post('/workshopDetails', workshopDetails)
+router.get('/getWorkshopDetails/:mechanicId', getWorkshopDetails)
+router.post('/setWorkshopExperience', setWorkshopExperience)
+
+router.post('/bookService', upload.array('images', 10), bookService)
+router.get('/getBookings/:mechanicId', getBookings)
+router.put('/updateBooking/:id', updateBooking)
+router.get('/userBookings/:userId', getUserBookings)
+
+router.get('/getCartProducts', getCartProducts)
+router.post('/addToCart', addToCart);
+router.delete('/removeFromCart/:productId', removeFromCart);
+router.get('/getSupplierInfo', getSupplierInfo);
+router.get('/getSupplierproducts', getSupplierStore);
 
 module.exports = router

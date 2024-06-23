@@ -1,4 +1,4 @@
-import { useContext, Suspense, useEffect, useState } from "react"
+import React, { useContext, Suspense, useEffect, useState } from "react"
 import { UserContext } from "../../context/userContext"
 import '../css/preloader.css';
 import '../css/productCard.css';
@@ -7,6 +7,7 @@ import Fortuner from '../3d Models/fortuner'
 import WagonR from '../3d Models/wagonR'
 import introImg from '../assets/home-intro.jpg'
 import axios from 'axios'
+import { Link } from 'react-router-dom';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 
@@ -108,20 +109,28 @@ export default function Home() {
                         <ul className="grid">
                             {products.map((product) => (
                                 <li key={product._id} className="grid-item">
-                                    <div className="product-card">
-                                        <p>Product Name: {product.product_name}</p>
-                                        <p>Description: {product.product_description}</p>                            
-                                        <p>Price: {product.product_price}</p>
-                                        <p>Available: In Stock</p>
-                                        {/* Additional product details can be added here */}
-                                    </div>
-
+                                    <Link to={`/productinformation/${product._id}`}>
+                                        <div className="product-card">
+                                        {product.images && product.images.length > 0 && (
+                                            <React.Fragment key={0}>
+                                            <img 
+                                                className="image-display"
+                                                src={`http://localhost:8000/${product.images[0]}`} 
+                                                alt={`Image 1`} 
+                                            />
+                                            </React.Fragment>
+                                            )}
+                                            <p>Product Name: {product.product_name}</p>
+                                            <p>Description: {product.product_description}</p>                            
+                                            <p>Price: {product.product_price}</p>
+                                            <p>Available: In Stock</p>
+                                            {/* Additional product details can be added here */}
+                                        </div>
+                                    </Link>
                                 </li>
                             ))}
                         </ul>
                     </div>
-
-
                 </>
             )}
         </div>

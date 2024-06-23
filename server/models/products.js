@@ -30,8 +30,8 @@ const productSchema = new Schema({
         type: String
     },
     images: {
-        type: [String], // String array for images
-        default: [] // Default empty array
+        type: [String],
+        default: []
     }
 })
 
