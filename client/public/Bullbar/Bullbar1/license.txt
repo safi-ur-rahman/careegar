@@ -1,0 +1,11 @@
+Model Information:
+* title:	Offroad Bumper
+* source:	https://sketchfab.com/3d-models/offroad-bumper-8a4c61ccd67e482ca56dd10614b18023
+* author:	T-FLEX CAD ST (Free) (https://sketchfab.com/tflexcad)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Offroad Bumper" (https://sketchfab.com/3d-models/offroad-bumper-8a4c61ccd67e482ca56dd10614b18023) by T-FLEX CAD ST (Free) (https://sketchfab.com/tflexcad) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

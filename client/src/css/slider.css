@@ -1,0 +1,12 @@
+.slider-body {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 20vh;
+    width: 100%;
+
+    background: linear-gradient(to right, #c0c0c3, #e3e3e3);
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: start;
+}

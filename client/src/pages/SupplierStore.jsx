@@ -20,7 +20,7 @@ export default function SupplierStore() {
     useEffect(() => {
         // Fetch products when the component mounts
         fetchProducts();
-    }, []); 
+    }, []);
 
     const fetchProducts = async () => {
         try {
@@ -35,21 +35,24 @@ export default function SupplierStore() {
         }
     };
 
-    const DeleteProduct = async (product) => {
+    const DeleteProduct = async (productId) => {
         try {
-            const response = await axios.delete("/deleteProduct", product._id);
-            if (response.data.error) {
-                toast.error(response.data.error);
-            } else {
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
-                toast.success("Product Deleted.");
-            }
+           
+            await axios.delete(`/deleteProduct/${productId}`); // Corrected endpoint with productId in the URL
+            setProducts((prevProducts) =>
+                prevProducts.filter((product) => product._id !== productId)
+            );
+            toast.success('Product deleted successfully.'); // Toast notification for success
         } catch (error) {
-            console.log(error);
+            console.error('Error deleting product:', error);
+            toast.error('Failed to delete product.'); // Toast notification for failure
         }
-    }
+    };
+
+    const handleProductAdded = () => {
+        fetchProducts();
+        setprodModal(false);
+    };
 
 
     return (
@@ -62,17 +65,21 @@ export default function SupplierStore() {
                 </div>
             ) : (
                 <>
-                    <h1 style={{color: 'black', fontSize:'44px' }}>Store Page</h1>
-                    <button onClick={() => {setprodModal(true); setproductToEdit(null)}}>Add Product</button>
+                    <h1 style={{ color: 'black', fontSize: '44px' }}>Store Page</h1>
+                    <button onClick={() => { setprodModal(true); setproductToEdit(null) }}>Add Product</button>
                 </>
             )}
             {prodModal && (
                 // Render your modal component here
-                <ProductModal isOpen={prodModal} onClose={() => setprodModal(false)} productToEdit = {productToEdit} />
+                <ProductModal 
+                    isOpen={prodModal} 
+                    onClose={() => setprodModal(false)} 
+                    productToEdit={productToEdit}
+                    onProductAdded={handleProductAdded} />
             )}
 
             <div className="products-grid">
-                <h1 style={{color: 'white', fontSize:'44px' }}>Products</h1>
+                <h1 style={{ color: 'white', fontSize: '44px' }}>Products</h1>
                 <ul className="grid">
                     {products.map((product) => (
                         <li key={product._id} className="grid-item">
@@ -91,13 +98,13 @@ export default function SupplierStore() {
                                 <p>Quantity: {product.product_quantity}</p>
                                 <p>Price: {product.product_price}</p>
                                 <div className="prod-icons">
-                                <img src={editSVG} onClick={()=>{setproductToEdit(product); setprodModal(true)}} alt="Edit Logo" />
-                                <img src={deleteSVG} onClick={()=>{DeleteProduct(product)}} />
-                                
+                                    <img src={editSVG} onClick={() => { setproductToEdit(product); setprodModal(true) }} alt="Edit Logo" />
+                                    <img src={deleteSVG} onClick={() => { DeleteProduct(product._id) }} />
+
                                 </div>
                                 {/* Additional product details can be added here */}
                             </div>
-                            
+
                         </li>
                     ))}
                 </ul>

@@ -1,0 +1,15 @@
+.slider-card {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    cursor: pointer;
+    color: black;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.slider-card img {
+    object-fit: cover;
+    width: 6rem;
+}

@@ -1,0 +1,42 @@
+.color-picker {
+    display: flex;
+    padding-top: 1.5rem;
+    width: 90%;
+}
+.color-type{
+    display: flex;
+}
+
+.color-picker label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+/* Styles for color picker input */
+.color-picker input {
+    border: none;
+    padding: 0%;
+
+}
+
+
+.color-picker select {
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 16px;
+    background-color: grey;
+    transition: background-color 0.3s ease;
+
+}
+
+.color-picker select option {
+    background-color: #ffffff;
+    color: #333;
+}
+
+
+.color-picker select option:hover {
+    background-color: #f0f0f0;
+
+}

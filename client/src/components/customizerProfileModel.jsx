@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../css/modal.css";
+import "../css/mechanicProfileModal.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react"
 import { UserContext } from "../../context/userContext"
@@ -148,7 +149,7 @@ export default function CustomizerProfileModal() {
             
             {step === 1 && (
               // Personal details section
-              <>
+              <div className="modal-form">
                 <h3>Workshop Info</h3>
                 <label>Upload image</label>
                 <input type="file" accept="image/*" onChange={handleFileChange}/>
@@ -172,18 +173,18 @@ export default function CustomizerProfileModal() {
                 <label>Workshop Description</label>
                 <input type="text" placeholder="Tell your customers about your workshop" value={data.workshop_description} onChange={(e) => setData({...data, workshop_description: e.target.value})}/>
 
-                <button onClick={handleNext}>Next</button>
-              </>
+                <button className="modal-button" onClick={handleNext}>Next</button>
+              </div>
             )}
 
             {step === 2 && (
                 // Mechanic Expertise section
                 <>
+                <div className="modal-form">
                     <h3>Customizer Expertise</h3>
                     <label>Add Tags:</label>
                     <em>Enter services or jobs (e.g., decaling, interior customizer) in which you are an expert and press enter for each tag to be added.</em>
                     <input
-                        style={{ width: '250px' }}
                         type="text"
                         placeholder="Tags"
                         value={data.tagInput}
@@ -196,26 +197,31 @@ export default function CustomizerProfileModal() {
                         <span key={index} className="tag">{tag}, </span>
                     ))}
                     </div>
-                    <button onClick={previousStep}>Back</button>
-                    <button onClick={nextStep}>Next</button>
+                    </div>
+                    <button className="modal-button" onClick={previousStep}>Back</button>
+                    <button className="modal-button" onClick={nextStep}>Next</button>
+                
                 </>
             )}
 
             {step === 3 && (
               // Car details section
               <>
+              <div className="modal-form">
                 <h3>Confirmation</h3>
                 <p>Are you sure you want to set up Careegar as a customizer and open a workshop with name {data.workshop_name}.</p>
-                <button onClick={previousStep}>Back</button>
+                </div>
+                <button className="modal-button" onClick={previousStep}>Back</button>
                 <Link to='/profile'>
-                  <button onClick={profileData} type="submit">Confirm</button>
+                  <button className="modal-button" onClick={profileData} type="submit">Confirm</button>
                 </Link>
+              
               </> 
             )}
 
             
             <Link to='/'>
-                  <button className="close-modal">
+                  <button>
                     Skip for Now
                   </button>
                 </Link>

@@ -12,12 +12,20 @@ import Search from './pages/Search'
 import SupplierStore from './pages/SupplierStore'
 import MechanicWorkshop from './pages/MechanicWorkshop'
 import CustomizerWorkshop from './pages/CustomizerWorkshop'
-import Configurator from './pages/3DConfigurator'
+import DConfigurator from './pages/3DConfigurator'
 import Layout from './layout'
 import CarOwnerProfileModal from './components/carownerProfileModal'
 import SupplierProfileModal from './components/supplierProfileModal'
 import MechanicProfileModal from './components/mechanicProfileModal'
 import CustomizerProfileModal from './components/customizerProfileModel'
+import ServiceComponent from './pages/ServiceComponent'
+import WorkshopPage from './pages/WorkshopPage'
+import UserBooking from './pages/UserBooking'
+import MarketPlace from './pages/MarketPlace'
+import SupplierProducts from './pages/SupplierProducts'
+import ProductInformation from './pages/ProductInformation'
+import Cart from './pages/Cart'
+import Configurator from './Configurator'
 
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true;
@@ -35,11 +43,19 @@ function App() {
             <Route path='/supplierStore' element={<SupplierStore />} />
             <Route path='/mechanicWorkshop' element={<MechanicWorkshop />} />
             <Route path='/customizerWorkshop' element={<CustomizerWorkshop />} />
-            <Route path='/3dConfigurator' element={<Configurator />} />
+            <Route path='/3dConfigurator' element={<DConfigurator />} />
             <Route path="/carownerProfileModal" element={<CarOwnerProfileModal />} />
             <Route path="/supplierProfileModal" element={<SupplierProfileModal />} />
             <Route path="/mechanicProfileModal" element={<MechanicProfileModal />} />
             <Route path="/customizerProfileModal" element={<CustomizerProfileModal />} />
+            <Route path="/service/:id" element={<ServiceComponent />}/>
+            <Route path="/workshop/:id" element={<WorkshopPage />}/>
+            <Route path="/bookingsPage" element={<UserBooking />}/>
+            <Route path="/productinformation/:id" element={<ProductInformation />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/marketplace" element={<MarketPlace />} />
+            <Route path="/supplier/:supplierId" element={<SupplierProducts/>} />
+            <Route path="/configurator/:car" element={<Configurator />} />
           </Route>
           <Route path='/register' element={<Register />} />
           <Route path='/login' element={<Login />} />

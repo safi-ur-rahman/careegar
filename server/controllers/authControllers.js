@@ -5,6 +5,9 @@ const Mechanic = require('../models/mechanic')
 const Customizer = require('../models/customizer')
 const Products = require('../models/products')
 const Services = require('../models/services')
+const Workshop = require('../models/workshop')
+const BookingService = require('../models/booking')
+const Cart = require('../models/cart')
 const { hashPassword, comparePassword} = require('../helpers/auth')
 const jwt = require('jsonwebtoken')
 
@@ -163,6 +166,27 @@ const getCustomizerProfile = async (req, res) => {
   } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+const getWorkshopDetails = async (req, res) => {
+  try {
+        const { mechanicId } = req.params;
+        const workshop = await Workshop.findOne({ mechanic_id: mechanicId });
+
+        if (!workshop) {
+            return res.status(404).json({ error: 'Workshop not found' });
+        }
+
+        res.json({ schedule: workshop.schedule,
+          experiences: workshop.experiences,
+          name: workshop.name,
+          address: workshop.address,
+          city: workshop.city,
+          description: workshop.description });
+    } catch (error) {
+        console.error('Error fetching schedule:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -547,6 +571,70 @@ const customizerProfile = async (req, res) => {
       }
 }
 
+const workshopDetails = async (req, res) => {
+    const { userDetails, schedule } = req.body;
+    const mechanic_id = userDetails._id;
+  
+    try {
+      // Find workshop details for the mechanic
+      let workshop = await Workshop.findOne({ mechanic_id });
+  
+      if (!workshop) {
+        // Create new workshop details if it doesn't exist
+        workshop = await Workshop.create({
+          mechanic_id,
+          schedule,
+          name: userDetails.workshop_name,
+          address: userDetails.workshop_address,
+          city: userDetails.workshop_city,
+          description: userDetails.workshop_description
+        });
+      } else {
+        // Update schedule if workshop already exists
+        workshop.schedule = schedule;
+        await workshop.save();
+      }
+  
+      res.json(workshop);
+    } catch (error) {
+      console.error('Error updating workshop details:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+const setWorkshopExperience = async (req, res) => {
+  const { userDetails, newExperience } = req.body;
+  const mechanic_id = userDetails._id;
+
+  try {
+    // Find workshop for the mechanic
+    const workshop = await Workshop.findOne({ mechanic_id });
+
+    if (!workshop) {
+      // If no workshop found, create a new one
+      const newWorkshop = await Workshop.create({
+        mechanic_id,
+        experiences: [newExperience],
+        name: userDetails.workshop_name,
+        address: userDetails.workshop_address,
+        city: userDetails.workshop_city,
+        description: userDetails.workshop_description
+      });
+
+      return res.json(newWorkshop);
+    }
+
+    // If workshop found, update the experiences
+    workshop.experiences.push(newExperience);
+    await workshop.save();
+
+    res.json(workshop);
+  } catch (error) {
+    console.error('Error updating workshop details:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
 const addProduct = async (req, res) => {
     try {
       const { supplier_id, product_name, product_description, product_price, product_quantity } = req.body;
@@ -626,21 +714,21 @@ const editProduct = async (req, res) => {
 }
 
 const deleteProduct = async (req, res) => {
-  
   try {
-      const product = req.body;
-      const deletedProduct = await Products.findOneAndDelete(product);
 
-      if (!deletedProduct) {
-          return res.status(404).json({ error: 'Product not found' });
-      }
+    const { productId } = req.params;
+    const deletedProduct = await Products.findByIdAndDelete(productId);
 
-      res.json({ message: 'Product deleted successfully' });
+    if (!deletedProduct) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    res.json({ message: 'Product deleted successfully' });
   } catch (error) {
-      console.error('Error deleting product:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error deleting product:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-}
+};
 
 const getProducts = async (req, res) => {
 
@@ -760,14 +848,14 @@ const editService = async (req, res) => {
 
 const deleteService = async (req, res) => {
   
-    try {
-        const service = req.body;
-        const deletedService = await Services.findOneAndDelete(service);
-  
+  try {
+        const serviceId = req.params.id;
+        const deletedService = await Services.findByIdAndDelete(serviceId);
+
         if (!deletedService) {
             return res.status(404).json({ error: 'Service not found' });
         }
-  
+
         res.json({ message: 'Service deleted successfully' });
     } catch (error) {
         console.error('Error deleting service:', error);
@@ -775,29 +863,358 @@ const deleteService = async (req, res) => {
     }
   }
 
-const getWorkshopServices = async (req, res) => {
-
+  const getProfilebyId = async (req,res) => {
     try {
-        if (req.cookies && req.cookies.token) {
-            const { token } = req.cookies;
-            const user = jwt.verify(token, process.env.JWT_SECRET);
-  
-            // Fetch additional user details from the database
-            const serDetails = await Services.find({ mechanic_id: user.id }).exec();
-  
-            res.json(serDetails);
-        } else {
-            res.json(null);
+        const { id } = req.params; // Destructure id from req.params
+
+        // Fetch the service details by ID from the database
+        let userDetails = await Mechanic.findById(id);
+
+        if (!userDetails) {
+            userDetails = await Customizer.findById(id);
         }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+
+        // Check if the service was found
+        if (!userDetails) {
+            return res.status(404).json({ error: 'Mechanic/Customizer not found' });
+        }
+
+        res.json(userDetails);
+      } catch (error) {
+          console.error('Error fetching mechanic/customizer:', error);
+          res.status(500).json({ error: 'Internal Server Error' });
     }
   }
+
+  const getWorkshopServices = async (req, res) => {
+    try {
+      const { mechanicId } = req.params; // Destructure id from req.params
+  
+      // Fetch the service details by ID from the database
+      const serDetails = await Services.find({ mechanic_id: mechanicId });
+  
+      // Check if the service was found
+      if (!serDetails) {
+        return res.status(404).json({ error: 'Service not found' });
+      }
+  
+      res.json(serDetails);
+    } catch (error) {
+      console.error('Error fetching workshop services:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };
+
+const getService = async (req, res) => {
+  try {
+    const service = await Services.findById(req.params.id);
+    if (!service) {
+        return res.status(404).json({ message: 'Service not found' });
+    }
+    res.json(service);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server Error' });
+  }
+}
+
+const getUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server Error' });
+  }
+}
+
+// const bookService = async (req,res) => {
+//   const { serviceId, user_id, mechanic_id, date, time, description } = req.body;
+
+//     // Validate the required fields
+//     if (!serviceId || !user_id || !mechanic_id || !date || !time || !description) {
+//         return res.status(400).json({ error: 'All fields are required' });
+//     }
+
+//     // Check if the time format is correct
+//     if (!/\d{2}:\d{2}/.test(time)) {
+//         return res.status(400).json({ error: 'Invalid time format' });
+//     }
+
+//     try {
+//         // Create a new booking
+//         const newBooking = new BookingService({
+//             serviceId,
+//             user_id,
+//             mechanic_id,
+//             date,
+//             time,
+//             description,
+//             atMechanic: true, // Setting atMechanic to true by default
+//             mechanicDescr: '', // Leaving mechanicDescr empty by default
+//             mechanicPrice: '' // Leaving mechanicPrice empty by default
+//         });
+
+//         // Save the booking to the database
+//         await newBooking.save();
+//         res.json({ success: true, message: 'Service booked successfully!' });
+//     } catch (error) {
+//         console.error('Error booking service:', error);
+//         res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// }
+
+const bookService = async (req, res) => {
+  const { serviceId, user_id, mechanic_id, date, time, description } = req.body;
+    // Validate the required fields
+    if (!serviceId || !user_id || !mechanic_id || !date || !time || !description) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    // Check if the time format is correct
+    if (!/\d{2}:\d{2}/.test(time)) {
+        return res.status(400).json({ error: 'Invalid time format' });
+    }
+
+    try {
+        let images = [];
+        // Check if images are present in the request
+        if (req.files && req.files.length > 0) {
+            images = req.files.map(file => file.path);
+        }
+
+        // Create a new booking
+        const newBooking = new BookingService({
+            serviceId,
+            user_id,
+            mechanic_id,
+            date,
+            time,
+            description,
+            images,
+            atMechanic: true, // Setting atMechanic to true by default
+            mechanicDescr: '', // Leaving mechanicDescr empty by default
+            mechanicPrice: ''
+        });
+
+        // Save the booking to the database
+        await newBooking.save();
+        res.json({ success: true, message: 'Service booked successfully!' });
+    } catch (error) {
+        console.error('Error booking service:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+const getBookings = async (req, res) => {
+  try {
+      const bookings = await BookingService.find({ mechanic_id: req.params.mechanicId });
+      res.json(bookings);
+  } catch (error) {
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+const updateBooking = async (req, res) => {
+  const { atMechanic, mechanicPrice, mechanicDescr } = req.body;
+
+    try {
+        const updatedBooking = await BookingService.findByIdAndUpdate(
+            req.params.id,
+            { atMechanic, mechanicPrice, mechanicDescr },
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedBooking) {
+            return res.status(404).json({ error: 'Booking not found' });
+        }
+
+        res.status(200).json({ success: true, updatedBooking });
+    } catch (error) {
+        console.error('Error updating booking:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+const getUserBookings = async (req, res) => {
+  try {
+      const bookings = await BookingService.find({ user_id: req.params.userId });
+      res.status(200).json(bookings);
+  } catch (error) {
+      console.error('Error fetching user bookings:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
 
 const logoutUser = async (req, res) => {
     res.cookie('token', '').json('ok');
 }
+
+const getProductById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Products.findById(id);
+
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    res.json(product);
+  } catch (error) {
+    console.error('Error fetching product data:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+
+}
+
+const getCartProducts = async (req, res) => {
+  try {
+    if (req.cookies && req.cookies.token) {
+      const { token } = req.cookies;
+      const user = jwt.verify(token, process.env.JWT_SECRET);
+
+      // Fetch user's cart document
+      const cart = await Cart.findOne({ user_id: user.id }).exec();
+      if (!cart || cart.products.length === 0) {
+        return res.status(404).json({ message: 'No products found in the cart' });
+      }
+
+      // Fetch product details for each product in the cart
+      const cartProducts = await Promise.all(cart.products.map(async (product) => {
+        const productDetails = await Products.findById(product.product_id).exec();
+        if (!productDetails) {
+          return {
+            _id: product.product_id,
+            deleted: true,
+            cartQuantity: product.quantity, // Include quantity from cart
+          };
+        }
+        return {
+          ...productDetails.toJSON(),
+          cartQuantity: product.quantity, // Include quantity from cart
+        };
+      }));
+
+      res.json(cartProducts);
+    } else {
+      res.status(400).json({ message: 'No token provided' });
+    }
+  } catch (error) {
+    console.error("Error in getCartProducts:", error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+const addToCart = async (req, res) => {
+  try {
+
+    if (req.cookies && req.cookies.token) {
+
+      const { token } = req.cookies;
+      const user = jwt.verify(token, process.env.JWT_SECRET);
+      const userId = user.id;
+
+
+      const { productId, quantity } = req.body;
+
+      // Find the user's cart or create a new one if it doesn't exist
+      let cart = await Cart.findOne({ user_id: userId });
+      if (!cart) {
+        cart = new Cart({ user_id: userId, products: [] });
+      }
+
+      // Check if the product is already in the cart
+      const existingProductIndex = cart.products.findIndex(product => product.product_id === productId);
+
+      if (existingProductIndex !== -1) {
+        // Update quantity if product already exists in the cart
+        cart.products[existingProductIndex].quantity += quantity;
+      } else {
+        // Add new product to cart
+        cart.products.push({ product_id: productId, quantity });
+      }
+
+      // Save the updated cart
+      await cart.save();
+
+      // Send success response
+      res.status(200).json({ message: 'Product added to cart successfully' });
+    } else {
+
+      res.status(401).json({ error: 'Unauthorized' });
+    }
+  } catch (error) {
+    console.error('Error adding product to cart:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+const removeFromCart = async (req, res) => {
+  try {
+    if (req.cookies && req.cookies.token) {
+
+      const { token } = req.cookies;
+      const user = jwt.verify(token, process.env.JWT_SECRET);
+      const userId = user.id; // Extract user ID from JWT token
+      const { productId } = req.params;
+
+      // Find the user's cart
+      let cart = await Cart.findOne({ user_id: userId });
+      if (!cart) {
+        return res.status(404).json({ message: 'Cart not found' });
+      }
+
+      // Remove the product from the cart
+      cart.products = cart.products.filter(product => product.product_id !== productId);
+      await cart.save();
+
+      res.status(200).json({ message: 'Product removed from cart successfully' });
+    } else {
+
+      res.status(401).json({ error: 'Unauthorized' });
+    }
+  } catch (error) {
+    console.error('Error removing product from cart:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+const getSupplierStore = async (req, res) => {
+  const { supplierId } = req.query;
+
+  try {
+    // Fetch products based on the supplierId
+    const products = await Products.find({ supplier_id: supplierId });
+
+    if (!products || products.length === 0) {
+      return res.status(404).json({ message: 'No products found for this supplier' });
+    }
+
+    res.json(products);
+  } catch (error) {
+    console.error("Error fetching supplier's products:", error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+const getSupplierInfo = async (req, res) => {
+  const { supplierId } = req.query;
+
+  try {
+    const supplier = await Supplier.find({ user_id: supplierId });
+
+    if (!supplier) {
+      return res.status(404).json({ message: 'Supplier not found' });
+    }
+
+    res.json(supplier);
+  } catch (error) {
+    console.error("Error fetching supplier's information:", error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 
 module.exports = {
     getProfile,
@@ -811,6 +1228,7 @@ module.exports = {
     getCarOwnerProfile,
     getSupplierProfile,
     getMechanicProfile,
+    getProfilebyId,
     getCustomizerProfile,
     searchUsers,
     searchProducts,
@@ -823,5 +1241,20 @@ module.exports = {
     addService,
     getWorkshopServices,
     editService,
-    deleteService
+    deleteService,
+    workshopDetails,
+    getWorkshopDetails,
+    setWorkshopExperience,
+    getService,
+    bookService,
+    getBookings,
+    getUser,
+    updateBooking,
+    getUserBookings,
+    getProductById,
+    getCartProducts,
+    removeFromCart,
+    addToCart,
+    getSupplierStore,
+    getSupplierInfo
 }

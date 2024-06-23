@@ -1,0 +1,11 @@
+.card {
+    display: flex;
+    flex-direction: column;
+    height: 5rem;
+    width: 5rem;
+    margin-bottom: 2rem;
+}
+
+.card img {
+    object-fit: cover;
+}
